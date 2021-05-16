@@ -4,12 +4,13 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "ts-node-dev --inspect --transpile-only --ignore-watch node_modules --respawn src/server.ts",
+    "dev": "ts-node-dev --transpile-only --ignore-watch node_modules --respawn --clear src/server.ts",
     "lint:fix": "eslint --fix . --ext ts,tsx",
     "test": "jest"
   },
   "dependencies": {
     "express": "^4.17.1",
+    "swagger-ui-express": "^4.1.6",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

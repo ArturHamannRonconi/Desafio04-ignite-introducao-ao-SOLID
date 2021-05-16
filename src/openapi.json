@@ -1,0 +1,283 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "User API",
+    "description": "A simple api for manager the users of your system.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Artur Hamann Ronconi",
+      "email": "arturhronconi@gmail.com"
+    }
+  },
+  "paths": {
+    "/users": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "List all users",
+        "description": "If you is a `admin` user, you have the possibility to use this operation for List all users for the API.",
+        "parameters": [{
+          "name": "user_id",
+          "in": "header",
+          "description": "Your user ID, you can get it after register",
+          "required": true,
+          "allowEmptyValue": false,
+          "schema": {
+            "type": "string"
+          },
+          "example": "d8ffb540-b5ed-11eb-8529-0242ac130003"
+        }],
+        "responses": {
+          "200": {
+            "description": "Operation realized with success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "Array<User>",
+                  "items": {
+                    "type": "Object<User>",
+                    "properties": {
+                      "name": { "type": "string" },
+                      "email": { "type": "string" },
+                      "admin": { "type": "boolean" },
+                      "created_at": { "type": "string" },
+                      "updated_at": { "type": "string" }
+                    }
+                  }
+                },
+                "example": [
+                  {
+                    "id": "732f6f68-b5f1-11eb-8529-0242ac130003",
+                    "name": "Joseph",
+                    "email": "joseph@mail.com",
+                    "admin": false,
+                    "created_at": "Sat May 15 2021",
+                    "updated_at": "Sat May 15 2021"
+                  },
+                  {
+                    "id": "9c317690-b5f1-11eb-8529-0242ac130003",
+                    "name": "Rosa",
+                    "email": "rosa@mail.com",
+                    "admin": true,
+                    "created_at": "Sat May 13 2021",
+                    "updated_at": "Sat May 15 2021"
+                  },
+                  {
+                    "id": "a111d7cc-b5f1-11eb-8529-0242ac130003",
+                    "name": "Eloi",
+                    "email": "eloi@mail.com",
+                    "admin": false,
+                    "created_at": "Sat Oct 10 2020",
+                    "updated_at": "Sat Set 11 2021"
+                  }
+                ]
+              }
+            }
+          },
+          "400": {
+            "description": "User not exists or user not allowed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "Object<Error>",
+                  "property": {
+                    "error": { "type": "string" }
+                  }
+                },
+                "examples": [
+                  {
+                    "summary": "User not found",
+                    "description": "the user who corresponds to that email does not exist",
+                    "value": { "error": "User not found" } 
+                  },
+                  {
+                    "summary": "User not allowed",
+                    "description": "The user does not have administrator permission to access this operation",
+                    "value": { "error": "Only admin is allowed" } 
+                  }
+
+                ]
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Users"],
+        "summary": "Create your user",
+        "description": "Use your email and your name for register a user in the API",
+        "requestBody": {
+          "description": "Your contact informations",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "Object",
+                "required": [ "name", "email" ],
+                "properties": {
+                  "name": { "type": "string" },
+                  "email": { "type": "string" }
+                }
+              },
+              "example": { "name":"Artur Hamann Ronconi", "email": "arturhronconi@gmail.com" }
+            }            
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "Object<User>",
+                  "property": {
+                    "name": { "type": "string" },
+                    "email": { "type": "string" },
+                    "admin": { "type": "boolean" },
+                    "created_at": { "type": "string" },
+                    "updated_at": { "type": "string" }
+                  }
+                },
+                "example": {
+                  "updated_at": "2021-05-16T19:10:29.074Z",
+                  "id": "d8ffb540-b5ed-11eb-8529-0242ac130003",
+                  "admin": false,
+                  "created_at": "2021-05-16T19:10:29.074Z",
+                  "name": "Artur Hamann Ronconi",
+                  "email": "arturhronconi@gmail.com"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The who's that used to register already been used",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type":"Object<Error>",
+                  "property": {
+                    "error": { "type": "string" } 
+                  }
+                },
+                "example": {
+                  "error": "User already exists!"
+                }
+              }
+            }
+          }
+        }
+      } 
+    },
+    "/users/{user_id}": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Search your user",
+        "description": "Utilize your ID for verify your user was created",
+        "parameters": [{
+            "name": "user_id",
+            "in": "path",
+            "description": "Your user ID, you can get it after register",
+            "required": true,
+            "allowEmptyValue": false,
+            "example": "d8ffb540-b5ed-11eb-8529-0242ac130003"
+        }],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "Object<User>",
+                  "property": {
+                    "name": { "type": "string" },
+                    "email": { "type": "string" },
+                    "admin": { "type": "boolean" },
+                    "created_at": { "type": "string" },
+                    "updated_at": { "type": "string" }
+                  }
+                },
+                "example": {
+                  "id": "d8ffb540-b5ed-11eb-8529-0242ac130003",
+                  "name": "Artur Hamann Ronconi",
+                  "email": "arturhronconi@gmail.com",
+                  "admin": false,
+                  "created_at": "2021-05-16T19:10:29.074Z",
+                  "updated_at": "2021-05-16T19:10:29.074Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "There is no user matching this ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type":"Object<Error>",
+                  "property": {
+                    "error": { "type": "string" } 
+                  }
+                },
+                "example": { "error": "User not found!" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{user_id}/admin": {
+      "patch": {
+        "tags": ["Users"],
+        "summary": "Transform your user in admin",
+        "description": "Gain administrator permission with your user",
+        "parameters": [{
+          "name": "user_id",
+          "in": "path",
+          "description": "Your user ID, you can get it after register",
+          "required": true,
+          "allowEmptyValue": false,
+          "example": "d8ffb540-b5ed-11eb-8529-0242ac130003"
+        }],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "Object<User>",
+                  "property": {
+                    "name": { "type": "string" },
+                    "email": { "type": "string" },
+                    "admin": { "type": "boolean" },
+                    "created_at": { "type": "string" },
+                    "updated_at": { "type": "string" }
+                  }
+                },
+                "example": {
+                  "updated_at": "2021-05-16T19:53:34.644Z",
+                  "id": "d8ffb540-b5ed-11eb-8529-0242ac130003",
+                  "admin": true,
+                  "created_at": "2021-05-16T19:10:29.074Z",
+                  "name": "Artur Hamann Ronconi",
+                  "email": "arturhronconi@gmail.com"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "There is no user matching this ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type":"Object<Error>",
+                  "property": {
+                    "error": { "type": "string" } 
+                  }
+                },
+                "example": { "error": "User not found!" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
